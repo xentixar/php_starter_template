@@ -47,23 +47,23 @@ This should display a index.php page of src directory.
 php_starter_template/
 │
 ├── config/
-│ └── app.php
-│ └── database.php
-│ └── environment.php
-│ └── pagination.php
-│ └── rule.php
-│ └── validation.php
-|
+│   └── app.php
+│   └── database.php
+│   └── environment.php
+│   └── pagination.php
+│   └── rule.php
+│   └── validation.php
+│
 ├── public/
-│ └── css
-│ └── images
-│ └── js
-|
+│   └── css
+│   └── images
+│   └── js
+│
 ├── src/
-│ └── index.php
+│   └── index.php
 │
 ├── vendor/
-| └── autoload.php
+│   └── autoload.php
 │
 ├── .env.example
 ├── .gitignore
