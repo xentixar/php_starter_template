@@ -36,6 +36,8 @@ cp .env.example .env
 
 7. **Run the project:**
 
+Start server and open browser and paste the following url :  
+
 ```bash
 localhost/your_directory
 ```
