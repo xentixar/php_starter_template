@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /xentixar/php_starter_template/
+
+RewriteCond %{THE_REQUEST} /src/([^\s?]*) [NC]
+RewriteRule ^ %1 [L,NE,R=302]
+
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|bmp|ico|svg|mp4|webm|ogg)$
+
+RewriteRule ^((?!src/).*)$ src/$1 [L,NC]
