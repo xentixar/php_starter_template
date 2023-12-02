@@ -68,7 +68,7 @@ php_starter_template/
 ├── .env.example
 ├── .gitignore
 ├── .htaccess
-└── README
+└── README.md
 
 
 - **config/:** Directory for the php configuration files.
@@ -78,7 +78,7 @@ php_starter_template/
 - **.env.example:** Environment example file.
 - **.gitignore:** Git ignore file to exclude certain files/directories.
 - **.htaccess:** Htaccess file to redirect all requests to src directory.
-- **README:** Project documentation file.
+- **README.md:** Project documentation file.
 
 ## Usage
 
