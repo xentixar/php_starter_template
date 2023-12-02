@@ -30,9 +30,9 @@ cp .env.example .env
 
 4. **Navigate to the .env file and configure database**
 
-5. **Navigate to the .env file and replace the 'APP_URI' value to your actual url**
+5. **Navigate to the .env file and replace the 'APP_URI' value to your actual directory**
 
-6. **Navigate to the .htaccess file and replace the 'RewriteBase' value to your actual url**
+6. **Navigate to the .htaccess file and replace the 'RewriteBase' value to your actual directory**
 
 7. **Run the project:**
 
