@@ -44,31 +44,31 @@ This should display a index.php page of src directory.
 
 ## Directory Structure
 
-php_starter_template/
-│
-├── config/
-│   └── app.php
-│   └── database.php
-│   └── environment.php
-│   └── pagination.php
-│   └── rule.php
-│   └── validation.php
-│
-├── public/
-│   └── css
-│   └── images
-│   └── js
-│
-├── src/
-│   └── index.php
-│
-├── vendor/
-│   └── autoload.php
-│
-├── .env.example
-├── .gitignore
-├── .htaccess
-└── README.md
+php_starter_template/  
+│  
+├── config/  
+│   └── app.php  
+│   └── database.php  
+│   └── environment.php  
+│   └── pagination.php  
+│   └── rule.php  
+│   └── validation.php  
+│  
+├── public/  
+│   └── css  
+│   └── images  
+│   └── js  
+│  
+├── src/  
+│   └── index.php  
+│  
+├── vendor/  
+│   └── autoload.php  
+│  
+├── .env.example  
+├── .gitignore  
+├── .htaccess  
+└── README.md  
 
 
 - **config/:** Directory for the php configuration files.
