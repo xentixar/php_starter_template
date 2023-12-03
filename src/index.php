@@ -14,9 +14,17 @@ require_once __DIR__ . '/../vendor/autoload.php';
 </head>
 
 <body>
+    <canvas id="stars"></canvas>
     <div class="container">
-        <div class="image"><img width="100%" src="<?= asset('images/xentixar.png') ?>" alt=""></div>
+        <div>
+            <div class="image">
+                <img width="100%" src="<?= asset('images/xentixar.png') ?>" alt="">
+            </div>
+            <div class="text">Successfully Loaded !</div>
+        </div>
     </div>
+
+    <script src="<?= asset('js/min.js') ?>"></script>
 </body>
 
 </html>

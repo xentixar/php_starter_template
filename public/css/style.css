@@ -1,11 +1,20 @@
+@import url('https://fonts.cdnfonts.com/css/avenir');
+
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-.container {
+canvas {
     background-color: #141830;
+    position: fixed;
+    z-index: -100;
+}
+
+.container {
+    /* background-color: #141830; */
     height: 100vh;
     display: flex;
     align-items: center;
@@ -14,20 +23,53 @@
 
 .container .image {
     max-width: 300px;
-    border-radius: 3px;
-    animation: rotate 3s linear infinite;
+    border-radius: 10px;
+    position: relative;
+    /* animation: rotate 3s linear infinite; */
 }
 
 .container .image img {
-    border-radius: 10px;
+    animation: rotate 3s linear infinite;
+}
+
+.container .image .moon {
+    position: absolute;
+    top: 0%;
+    right: 0%;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ffffff;
+    animation: revolve 6s linear infinite;
+}
+
+.container .text {
+    color: #ffffff;
+    text-align: center;
+    font-size: 1.5rem;
+    font-family: 'Avenir', sans-serif;
 }
 
 @keyframes rotate {
     from {
-        transform: rotate(0deg);
+        transform: rotate3d(0, 1, 0, 0deg);
     }
 
     to {
-        transform: rotate(360deg);
+        transform: rotate3d(0, 1, 0, 360deg);
+    }
+}
+
+@keyframes revolve {
+    0% {
+        top: 0;
+        /* right: 0; */
+        transform: rotate3d(0, 1, 0, 90deg);
+    }
+
+    100% {
+        top: 100%;
+        /* right: ; */
+        transform: rotate3d(0, 1, 0, 360deg);
     }
 }
