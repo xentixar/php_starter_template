@@ -4,6 +4,7 @@ class Rule extends Validation
     protected array $fields;
     protected array $request;
     protected int $error_count;
+    protected int $error;
 
     public function __construct(array $request)
     {
@@ -13,8 +14,9 @@ class Rule extends Validation
     public function validate(array $validations): bool
     {
         $this->fields = $validations;
-        $this->error_count = 0;
+        $this->error = 0;
         foreach ($this->fields as $field => $validation_key) {
+            $this->error_count = 0;
             $validation_keys = explode('|', $validation_key);
             foreach ($validation_keys as $validation_key) {
                 if (key_exists($validation_key, $this->messages)) {
@@ -45,6 +47,15 @@ class Rule extends Validation
                         if ($this->error_count) {
                             break;
                         }
+                    } elseif ($validation_key === 'alpha_dash') {
+                        if (isset($this->request["$field"])) {
+                            $this->alpha_dash($this->request["$field"], $field, $validation_key);
+                        } else {
+                            $this->alpha_dash("not a alpha dash", $field, $validation_key);
+                        }
+                        if ($this->error_count) {
+                            break;
+                        }
                     } elseif ($validation_key === 'image') {
                         if (isset($this->request["$field"])) {
                             if (isset($this->request["$field"]['tmp_name'])) {
@@ -68,12 +79,29 @@ class Rule extends Validation
                     if (key_exists("$keys[0]", $this->messages)) {
                         if ($keys[0] == "max") {
                             $this->max($this->request["$field"], $field, $keys[0], (int)$keys[1]);
+                            if ($this->error_count) {
+                                break;
+                            }
                         } elseif ($keys[0] == "min") {
                             $this->min($this->request["$field"], $field, $keys[0], (int)$keys[1]);
+                            if ($this->error_count) {
+                                break;
+                            }
                         } elseif ($keys[0] == "in") {
                             $this->in($this->request["$field"], $field, $keys[0], $keys[1]);
+                            if ($this->error_count) {
+                                break;
+                            }
                         } elseif ($keys[0] == "exists") {
                             $this->exists($this->request["$field"], $field, $keys[0], $keys[1]);
+                            if ($this->error_count) {
+                                break;
+                            }
+                        } elseif ($keys[0] == "unique") {
+                            $this->unique($this->request["$field"], $field, $keys[0], $keys[1]);
+                            if ($this->error_count) {
+                                break;
+                            }
                         }
                     } else {
                         echo "Validation failed. Please try again.";
@@ -84,8 +112,9 @@ class Rule extends Validation
                     return false;
                 }
             }
+            $this->error = $this->error_count;
         }
-        if ($this->error_count) {
+        if ($this->error) {
             return false;
         } else {
             return true;
@@ -101,9 +130,14 @@ class Rule extends Validation
         }
     }
 
+    private function filter_email($value)
+    {
+        return preg_match("/[a-z\.0-1]+@[a-z]+\.[a-z]+/i", $value);
+    }
+
     protected function email($value, $field, $validation_key)
     {
-        if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+        if (!$this->filter_email($value)) {
             $message = str_replace(":attr", $field, $this->messages["$validation_key"]);
             $_SESSION['error']["$field"] = $message;
             $this->error_count++;
@@ -112,6 +146,15 @@ class Rule extends Validation
     protected function number($value, $field, $validation_key)
     {
         if (!is_numeric($value)) {
+            $message = str_replace(":attr", $field, $this->messages["$validation_key"]);
+            $_SESSION['error']["$field"] = $message;
+            $this->error_count++;
+        }
+    }
+
+    protected function alpha_dash($value, $field, $validation_key)
+    {
+        if (!preg_match('/^[a-zA-Z0-9-_]+$/', $value)) {
             $message = str_replace(":attr", $field, $this->messages["$validation_key"]);
             $_SESSION['error']["$field"] = $message;
             $this->error_count++;
@@ -175,6 +218,52 @@ class Rule extends Validation
                     $message = str_replace(":attr", $field, $this->messages["$validation_key"]);
                     $_SESSION['error']["$field"] = $message;
                     $this->error_count++;
+                }
+            } else {
+                $_SESSION['error']["$field"] = "Table $table doesn't exists on database";
+                $this->error_count++;
+            }
+            $conn->close();
+        }
+    }
+    protected function unique($value, $field, $validation_key, $values)
+    {
+        $values = explode(',', $values);
+        if (count($values) >= 2) {
+            $table = $values[0];
+            $column = $values[1];
+            $except = null;
+            if (count($values) === 3) {
+                $except = $values[2] ?? null;
+            }
+            $database = new Database();
+            $conn = $database->connect();
+
+            $check_result = $conn->query("DESCRIBE $table");
+            if ($check_result) {
+                $columnType = "";
+                while ($row = $check_result->fetch_assoc()) {
+                    $columnName = $row["Field"];
+                    if ($columnName === $column) {
+                        $columnType = $row["Type"];
+                        $columnType = explode('(', $columnType);
+                        $columnType = $columnType[0];
+                    }
+                }
+                if ($columnType !== "") {
+                    $select_query = "SELECT COUNT(*) FROM $table WHERE $column=?" . ($except ? " AND id != $except" : '');
+                    $stmt = $conn->prepare($select_query);
+                    $stmt->bind_param($columnType == 'int' ? 'i' : 's', $value);
+                    $stmt->execute();
+
+                    $stmt->bind_result($count);
+                    $stmt->fetch();
+
+                    if ($count > 0) {
+                        $message = str_replace(":attr", $field, $this->messages["$validation_key"]);
+                        $_SESSION['error']["$field"] = $message;
+                        $this->error_count++;
+                    }
                 }
             } else {
                 $_SESSION['error']["$field"] = "Table $table doesn't exists on database";

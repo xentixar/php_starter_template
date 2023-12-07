@@ -43,17 +43,18 @@ class Pagination
         if ($this->page == 0) {
             throw new Error('You can\'t use links method until you have paginated the data!');
         }
-        $links = '';
-        $current_page = $this->page;
-        for ($i = (($current_page - 4) >= 1 ? $current_page - 4 : 1); $i <= (($current_page + 4) <= $this->max_page ? $current_page + 4 : $this->max_page); $i++) {
-            $status = ($i == $this->page ? 'active' : '');
-            $links .= "<li class='page-item $status'><a class='page-link' href='?page=$i'>$i</a></li>";
-        }
-        $previous_page = $this->page - 1;
-        $previous_page_status = $this->page == 1 ? 'disabled' : '';
-        $next_page = $this->page  + 1;
-        $next_page_status = $this->page == $this->max_page ? 'disabled' : '';
-        echo "<nav aria-label='Page navigation example'>
+        if ($this->max_page > 1) {
+            $links = '';
+            $current_page = $this->page;
+            for ($i = (($current_page - 4) >= 1 ? $current_page - 4 : 1); $i <= (($current_page + 4) <= $this->max_page ? $current_page + 4 : $this->max_page); $i++) {
+                $status = ($i == $this->page ? 'active' : '');
+                $links .= "<li class='page-item $status'><a class='page-link' href='?page=$i'>$i</a></li>";
+            }
+            $previous_page = $this->page - 1;
+            $previous_page_status = $this->page == 1 ? 'disabled' : '';
+            $next_page = $this->page  + 1;
+            $next_page_status = $this->page == $this->max_page ? 'disabled' : '';
+            echo "<nav aria-label='Page navigation example'>
             <ul class='pagination justify-content-end my-3' style='flex-wrap:wrap'>
                 <li class='page-item $previous_page_status'>
                     <a class='page-link' href='?page=$previous_page' tabindex='-1' aria-disabled='true'>Previous</a>
@@ -64,5 +65,6 @@ class Pagination
                 </li>
             </ul>
         </nav>";
+        }
     }
 }
